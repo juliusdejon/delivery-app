@@ -16,7 +16,9 @@ app.set("view engine", ".hbs");
 /*
   db connection
 */
-mongoose.connect(process.env.MONGO_DB_URL);
+
+const MONGO_DB_URL = "";
+mongoose.connect(MONGO_DB_URL);
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Error connecting to database: "));
 db.once("open", () => {
@@ -28,7 +30,7 @@ db.once("open", () => {
 */
 
 app.get("/", (req, res) => {
-  res.send("Restaurant Website");
+  res.render("index", { layout: false });
 });
 
 /*
