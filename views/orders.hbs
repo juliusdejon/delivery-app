@@ -25,8 +25,11 @@
 </head>
 <body>
   <h1>Order List</h1>
+  <form action="/orders" method="post">
   <label for="customerName">Search:</label>
   <input name="customerName" type="text" placeholder="Search Customer Name" />
+  <button type="submit">Submit</button>
+  </form>
   <table>
     <th>Order Code</th>
     <th>Customer Name</th>

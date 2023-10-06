@@ -160,7 +160,26 @@ app.get("/orders", (req, res) => {
   });
 });
 
-app.get("/orders/:orderCode", (req, res) => {});
+app.post("/orders", (req, res) => {
+  const customerName = req.body.customerName;
+  if (customerName) {
+    // will replace .filter with mongo search
+    const filteredOrdersData = formattedOrdersMockData.filter((data) =>
+      data.customerName
+        .toLocaleLowerCase()
+        .includes(customerName.toLocaleLowerCase())
+    );
+    res.render("orders", {
+      layout: false,
+      orders: filteredOrdersData,
+    });
+  } else {
+    res.render("orders", {
+      layout: false,
+      orders: formattedOrdersMockData,
+    });
+  }
+});
 
 /*
   delivery endpoints
