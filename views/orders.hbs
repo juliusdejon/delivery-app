@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Order List</h1>
+  <table>
+    <th>Customer Name</th>
+    <th>Total Orders</th>
+    <th>Delivery Address</th>
+    <th>Created At</th>
+    <th>Status</th>
+    <th>Driver Name</th>
+    <th>Driver's License Plate</th>
+    <th>Proof of Delivery</th>
+    {{#each orders}}
+    <tr>
+      <td>{{this.customerName}}</td>
+      <td>{{this.itemsOrdered.length}}</td>
+      <td>{{this.deliveryAddress}}</td>
+      <td>{{this.orderDate}}</td>
+      <td>{{this.orderStatus}}</td>
+      <td>{{this.driverName}}</td>
+      <td>{{this.driverLicensePlate}}</td>
+      <td>{{this.proofOfDelivery}}</td>
+    </tr>
+    {{/each}}
+  </table>
+</body>
+</html>
