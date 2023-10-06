@@ -108,7 +108,6 @@ app.get("/orders", (req, res) => {
   res.render("orders", {
     layout: false,
     orders: ordersMockData,
-    totalOrders: ordersMockData.length,
   });
 });
 
