@@ -38,7 +38,6 @@
             <div class="order">
               <article class="order-details">
               <h4>Order Details</h4>
-              <p>{{this.orderDate}}</p>
               <p>Order Items: {{this.orderItems}}</p>
               <p>Order Total: {{this.orderTotal}}</p>
               </article>
@@ -51,6 +50,10 @@
               <h4>Order Status</h4>
               <p>{{this.orderStatus}}</p>
               </article>
+              <article class="order-date">
+              <h4>Ordered Date</h4>
+              <p>{{this.orderDate}}</p>
+              </article>
               {{#if this.driverId}}
               <article class="delivery-details">
               <h4>Delivered By</h4>
@@ -60,9 +63,12 @@
               </article>
               {{/if}}
               {{#if this.isReceived}}
+              <article class="action">
+              <h4>Action</h4>
               <div class="btn-wrapper">
                 <button class="btn-deliver" type="submit">Send to Delivery</button>
               </div>
+              </article>
               {{/if}}
             </div>
           {{/each}}

@@ -3,6 +3,7 @@ body {
   background-color: #F4F4FA;
   color: #454545;
   margin: 0;
+  font-size: 14px;
 }
 
 
@@ -67,8 +68,11 @@ form > button {
   width: 30%;
 }
 
-.status, .delivery-details, .btn-wrapper {
+.delivery-details, .action {
   width: 20%;
+}
+.status, .order-date {
+  width: 10%;
 }
 
 .btn-wrapper {
