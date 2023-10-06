@@ -68,52 +68,95 @@ const itemsMock = [
   order endpoints
 */
 
-const ordersMockData = [
+const ordersMockDb = [
   {
     _id: 1,
     customerName: "John Doe",
     deliveryAddress: "45 Four Winds Dr. North York, Toronto, ON",
-    itemsOrdered: [1, 4],
+    orderCode: "M01",
+    orderItems: [1, 4],
     orderTotal: 25,
     orderDate: "2023-10-05",
     orderStatus: "Received",
     proofOfDelivery: "",
     driverId: null,
-    driverName: "",
-    driverLicensePlate: "",
   },
   {
     _id: 2,
     customerName: "Finch West",
     deliveryAddress: "22 Alphabet Dr. North York, Toronto, ON",
-    itemsOrdered: [3, 5, 1],
+    orderCode: "M02",
+    orderItems: [3, 5, 1],
     orderTotal: 34,
     orderDate: "2023-10-06",
     orderStatus: "Received",
     proofOfDelivery: "",
     driverId: null,
-    driverName: "",
-    driverLicensePlate: "",
   },
   {
     _id: 3,
     customerName: "Jane Doe",
     deliveryAddress: "46 Four Winds Dr. North York, Toronto, ON",
-    itemsOrdered: [3],
+    orderCode: "M03",
+    orderItems: [3],
     orderTotal: 12,
     orderDate: "2023-10-06",
     orderStatus: "In Transit",
     proofOfDelivery: "",
     driverId: 1,
+  },
+];
+
+// Ignore this. Formatted Data for Order Website
+const formattedOrdersMockData = [
+  {
+    _id: 1,
+    customerName: "John Doe",
+    deliveryAddress: "45 Four Winds Dr. North York, Toronto, ON",
+    orderCode: "M01",
+    orderItems: [1, 4],
+    orderTotal: 25,
+    orderDate: "2023-10-05",
+    orderStatus: "Received",
+    proofOfDelivery: "",
+    driverName: "",
+    driverLicensePlate: "",
+    isReceived: true,
+  },
+  {
+    _id: 2,
+    customerName: "Finch West",
+    deliveryAddress: "22 Alphabet Dr. North York, Toronto, ON",
+    orderCode: "M02",
+    orderItems: [3, 5, 1],
+    orderTotal: 34,
+    orderDate: "2023-10-06",
+    orderStatus: "Received",
+    proofOfDelivery: "",
+    driverName: "",
+    driverLicensePlate: "",
+    isReceived: true,
+  },
+  {
+    _id: 3,
+    customerName: "Jane Doe",
+    deliveryAddress: "46 Four Winds Dr. North York, Toronto, ON",
+    orderCode: "M03",
+    orderItems: [3],
+    orderTotal: 12,
+    orderDate: "2023-10-06",
+    orderStatus: "In Transit",
+    proofOfDelivery: "",
     driverName: "Mike Ross",
     driverLicensePlate: "ABCD 555",
+    isReceived: false,
   },
 ];
 
 app.get("/orders", (req, res) => {
   res.render("orders", {
     layout: false,
-    orders: ordersMockData,
+    orders: formattedOrdersMockData,
   });
 });
 

@@ -15,11 +15,20 @@
     th, td {
       padding: 12px;
     }
+    input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 24px;
+      width: 300px;
+    }
   </style>
 </head>
 <body>
   <h1>Order List</h1>
+  <label for="customerName">Search:</label>
+  <input name="customerName" type="text" placeholder="Search Customer Name" />
   <table>
+    <th>Order Code</th>
     <th>Customer Name</th>
     <th>Total Amount</th>
     <th>Delivery Address</th>
@@ -28,8 +37,10 @@
     <th>Driver Name</th>
     <th>Driver's License Plate</th>
     <th>Proof of Delivery</th>
+    <th>Action</th>
     {{#each orders}}
     <tr>
+      <td>{{this.orderCode}}</td>
       <td>{{this.customerName}}</td>
       <td>{{this.orderTotal}}</td>
       <td>{{this.deliveryAddress}}</td>
@@ -38,8 +49,14 @@
       <td>{{this.driverName}}</td>
       <td>{{this.driverLicensePlate}}</td>
       <td>{{this.proofOfDelivery}}</td>
+      <td>
+        {{#if this.isReceived}}
+        <button type="submit">Ready For Delivery</button>
+        {{/if}}
+      </td>
     </tr>
     {{/each}}
   </table>
+
 </body>
 </html>
