@@ -1,65 +1,72 @@
-<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order</title>
-  <style>
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    table, th, td {
-      border: 1px solid black;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 12px;
-    }
-    input {
-      padding: 8px;
-      border: 1px solid #ccc;
-      margin-bottom: 24px;
-      width: 300px;
-    }
-  </style>
-</head>
-<body>
-  <h1>Order List</h1>
-  <form action="/orders" method="post">
-  <label for="customerName">Search:</label>
-  <input name="customerName" type="text" placeholder="Search Customer Name" />
-  <button type="submit">Submit</button>
-  </form>
-  <table>
-    <th>Order Code</th>
-    <th>Customer Name</th>
-    <th>Total Amount</th>
-    <th>Delivery Address</th>
-    <th>Created At</th>
-    <th>Status</th>
-    <th>Driver Name</th>
-    <th>Driver's License Plate</th>
-    <th>Proof of Delivery</th>
-    <th>Action</th>
-    {{#each orders}}
-    <tr>
-      <td>{{this.orderCode}}</td>
-      <td>{{this.customerName}}</td>
-      <td>{{this.orderTotal}}</td>
-      <td>{{this.deliveryAddress}}</td>
-      <td>{{this.orderDate}}</td>
-      <td>{{this.orderStatus}}</td>
-      <td>{{this.driverName}}</td>
-      <td>{{this.driverLicensePlate}}</td>
-      <td>{{this.proofOfDelivery}}</td>
-      <td>
-        {{#if this.isReceived}}
-        <button type="submit">Ready For Delivery</button>
-        {{/if}}
-      </td>
-    </tr>
-    {{/each}}
-  </table>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap"
+      rel="stylesheet"
+    />
+    <link href="/orders.css" rel="stylesheet" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <ul>
+          <li><img class="logo" src="/logo/hjm-logo.png" /></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h2>Orders</h2>
+              <form action="/orders" method="post">
+          <input
+            name="customerName"
+            type="text"
+            placeholder="Search by customer name"
+          />
+          <button type="submit">Search</button>
+        </form>
+      <section>
 
-</body>
+          {{#each orders}}
+            <h2 class="order-code">{{this.orderCode}}</h2>
+            <div class="order">
+              <article class="order-details">
+              <h4>Order Details</h4>
+              <p>{{this.orderDate}}</p>
+              <p>Order Items: {{this.orderItems}}</p>
+              <p>Order Total: {{this.orderTotal}}</p>
+              </article>
+              <article class="customer-details">
+              <h4>Customer Details</h4>
+               <p>Name: {{this.customerName}}</p>
+               <p>Address: {{this.deliveryAddress}}</p>
+              </article>
+              <article class="status">
+              <h4>Order Status</h4>
+              <p>{{this.orderStatus}}</p>
+              </article>
+              {{#if this.driverId}}
+              <article class="delivery-details">
+              <h4>Delivered By</h4>
+              <p>Name: {{this.driverName}}
+              <p>License Plate: {{this.driverLicensePlate}}</p>
+              <p>Proof of Delivery: {{this.proofOfDelivery}}</p>
+              </article>
+              {{/if}}
+              {{#if this.isReceived}}
+              <div class="btn-wrapper">
+                <button class="btn-deliver" type="submit">Send to Delivery</button>
+              </div>
+              {{/if}}
+            </div>
+          {{/each}}
+      </section>
+    </main>
+  </body>
 </html>

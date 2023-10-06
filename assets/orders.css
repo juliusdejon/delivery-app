@@ -1,0 +1,84 @@
+body {
+  font-family: 'Mulish', sans-serif;
+  background-color: #F4F4FA;
+  color: #454545;
+  margin: 0;
+}
+
+
+.logo {
+  width: 140px;
+}
+
+header > nav {
+  background-color: white;
+  padding: 2px;
+}
+
+header > nav > ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+main {
+  margin: 0 auto;
+  margin-top: 40px;
+  width: 90%;
+}
+
+section {
+  background-color: white;
+  padding: 12px 24px;
+}
+
+form {
+  display: flex;
+  gap: 10px;
+  color: #454545;
+}
+
+form > input {
+  height: 40px;
+  border: 1px solid #ccc;
+  width: 200px;
+  padding: 12px;
+}
+
+form > button {
+  background-color: #16a085;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 12px;
+}
+
+.order-code {
+  margin-bottom: 0px;
+}
+
+.order {
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+.order-details, .customer-details {
+  width: 30%;
+}
+
+.status, .delivery-details, .btn-wrapper {
+  width: 20%;
+}
+
+.btn-wrapper {
+  margin: auto;
+}
+
+.btn-deliver {
+  background-color: #16a085;
+  color: white;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+}
