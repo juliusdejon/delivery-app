@@ -64,7 +64,10 @@ form > button {
   border-bottom: 1px solid #ccc;
 }
 
-.order-details, .customer-details {
+.order-details {
+  width: 15%;
+}
+.customer-details {
   width: 30%;
 }
 
@@ -75,6 +78,9 @@ form > button {
   width: 10%;
 }
 
+.order-cost {
+  width: 10%;
+}
 .btn-wrapper {
   margin: auto;
 }
