@@ -1,7 +1,6 @@
 body {
-  font-family: 'Mulish', sans-serif;
-  background-color: #F4F4FA;
-  color: #454545;
+  font-family: 'Inter', sans-serif;
+  background-color: #fff;
   margin: 0;
   font-size: 14px;
 }
@@ -12,7 +11,8 @@ body {
 }
 
 header > nav {
-  background-color: white;
+  background-color: #fff;
+  border-bottom: 1px solid #F4F4F4;
   padding: 2px;
 }
 
@@ -29,66 +29,83 @@ main {
 }
 
 section {
-  background-color: white;
-  padding: 12px 24px;
+  margin-top: 24px;
+  margin-bottom: 24px;
+  background-color: #fff;
+  border: 1px solid #EAEAEA;
+  border-radius: 8px;
 }
 
-form {
+main > form {
   display: flex;
   gap: 10px;
   color: #454545;
 }
 
-form > input {
-  height: 40px;
-  border: 1px solid #ccc;
-  width: 200px;
-  padding: 12px;
+.input-search {
+  height: 36px;
+  border: 1px solid #EAEAEA;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 240px;
+  padding: 14px;
 }
 
-form > button {
-  background-color: #16a085;
-  color: white;
+.btn-search {
+  background-color: #ffeaa7;
+  color: #454545;
   border: none;
+  border-radius: 6px;
+  padding: 0px 16px;
+  font-weight: 600;
   cursor: pointer;
+}
+
+
+table {
+  font-size: 14px;
+  width: 100%;
+  border-collapse: collapse;
+}
+tr {
+  border-bottom: 1px solid #EAEAEA;
+}
+
+tr > td:first-child {
+  font-weight: bold;
+}
+
+td, th {
   padding: 12px;
 }
 
-.order-code {
-  margin-bottom: 0px;
+th {
+  background-color: #F4F4F5;
+  color: #54575C;
+  font-size: 12px;
+  font-weight: 400;
+  text-align: left;
+}
+td {
+  color: #6D6E73;
 }
 
-.order {
-  display: flex;
-  gap: 20px;
-  border-bottom: 1px solid #ccc;
+.span-status {
+  height: 12px;
+  width: 12px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
 }
 
-.order-details {
-  width: 15%;
-}
-.customer-details {
-  width: 30%;
-}
-
-.delivery-details, .action {
-  width: 20%;
-}
-.status, .order-date {
-  width: 10%;
-}
-
-.order-cost {
-  width: 10%;
-}
-.btn-wrapper {
-  margin: auto;
-}
 
 .btn-deliver {
-  background-color: #16a085;
-  color: white;
-  border: none;
+  background-color: #5dbea3;
   padding: 12px;
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+  border-radius: 4px;
   cursor: pointer;
+  border: none;
 }

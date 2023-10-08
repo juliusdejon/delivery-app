@@ -17,13 +17,49 @@ app.set("view engine", ".hbs");
   db connection
 */
 
-// const MONGO_DB_URL = "";
-// mongoose.connect(MONGO_DB_URL);
-// const db = mongoose.connection;
-// db.on("error", console.error.bind(console, "Error connecting to database: "));
-// db.once("open", () => {
-//   console.log("Mongo DB connected successfully.");
-// });
+const MONGO_DB_URL =
+  "mongodb+srv://dbUser:5Tl4PdCVlysHVuhW@cluster0.7edcod3.mongodb.net/myDb?retryWrites=true&w=majority";
+mongoose.connect(MONGO_DB_URL);
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "Error connecting to database: "));
+db.once("open", () => {
+  console.log("Mongo DB connected successfully.");
+});
+
+const Schema = mongoose.Schema;
+
+const ItemSchema = new Schema({
+  name: String,
+  image: String,
+  description: String,
+  price: Number,
+});
+
+const OrderSchema = new Schema({
+  customerName: String,
+  deliveryAddress: String,
+  orderCode: String,
+  orderItems: Array,
+  orderTotal: Number,
+  orderDate: { type: Date, default: Date.now },
+  orderStatus: String,
+  proofOfDelivery: String,
+  driverEmailId: String,
+});
+
+const DriverSchema = new Schema({
+  name: String,
+  email: String,
+  password: String,
+  vehiclemodel: String,
+  vehiclecolor: String,
+  licenceplatenumber: String,
+  activeOrders: Number,
+});
+
+const Item = mongoose.model("item_collection", ItemSchema);
+const Order = mongoose.model("order_collection", OrderSchema);
+const Driver = mongoose.model("driver", DriverSchema);
 
 /*
   restaurant endpoints
@@ -33,134 +69,131 @@ app.get("/", (req, res) => {
   res.render("index", { layout: false });
 });
 
-const itemsMock = [
-  {
-    _id: 1,
-    name: "Product1",
-    image: "donut.jpeg",
-    description: "Lorem ipsum",
-    price: 100,
-  },
-  {
-    _id: 2,
-    name: "Product2",
-    image: "donut.jpeg",
-    description: "Lorem ipsum",
-    price: 100,
-  },
-  {
-    _id: 3,
-    name: "Product3",
-    image: "donut.jpeg",
-    description: "Lorem ipsum",
-    price: 100,
-  },
-  {
-    _id: 4,
-    name: "Product4",
-    image: "donut.jpeg",
-    description: "Lorem ipsum",
-    price: 100,
-  },
-];
+app.get("/add-item", async (req, res) => {
+  const item = {
+    name: "Cheese Burger",
+    image:
+      "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9?ixlib=rb",
+    description:
+      "Dive into the ultimate indulgence with a double meat cheeseburger",
+    price: 18.99,
+  };
+  try {
+    const result = await new Item(item).save();
+    console.log(result);
+    return res.send(result);
+  } catch (err) {
+    console.log(err);
+    return res.send(err);
+  }
+});
+
+app.get("/create-order", async (req, res) => {
+  const items = await Item.find().lean().exec();
+  console.log(items);
+  const order = {
+    customerName: "Eminem",
+    deliveryAddress: "2 Three Winds Dr. North York, Toronto, ON",
+    orderCode: "M04",
+    orderItems: ["6521ea2032fb8c2dee0a3d54"],
+    orderTotal: 8.99,
+    orderStatus: "In Transit",
+    proofOfDelivery: "",
+    driverEmailId: "harsh17",
+  };
+  try {
+    const result = await new Order(order).save();
+    console.log(result);
+    return res.send(result);
+  } catch (err) {
+    console.log(err);
+    return res.send(err);
+  }
+});
+
+app.get("/remove-order/:orderId", async (req, res) => {
+  try {
+    const result = await Order.findOne({ _id: req.params.orderId });
+    if (result === null) {
+      return res.send("Cannot find order with that id");
+    }
+    const id = await result.deleteOne();
+    return res.send(`Deleted: ${id}`);
+  } catch (err) {
+    console.log(err);
+    return res.send(err);
+  }
+});
 
 /*
   order endpoints
 */
 
-const ordersMockDb = [
-  {
-    _id: 1,
-    customerName: "John Doe",
-    deliveryAddress: "45 Four Winds Dr. North York, Toronto, ON",
-    orderCode: "M01",
-    orderItems: [1, 4],
-    orderTotal: 25,
-    orderDate: "2023-10-05",
-    orderStatus: "Received",
-    proofOfDelivery: "",
-    driverId: null,
-  },
-  {
-    _id: 2,
-    customerName: "Finch West",
-    deliveryAddress: "22 Alphabet Dr. North York, Toronto, ON",
-    orderCode: "M02",
-    orderItems: [3, 5, 1],
-    orderTotal: 34,
-    orderDate: "2023-10-06",
-    orderStatus: "Received",
-    proofOfDelivery: "",
-    driverId: null,
-  },
-  {
-    _id: 3,
-    customerName: "Jane Doe",
-    deliveryAddress: "46 Four Winds Dr. North York, Toronto, ON",
-    orderCode: "M03",
-    orderItems: [3],
-    orderTotal: 12,
-    orderDate: "2023-10-06",
-    orderStatus: "In Transit",
-    proofOfDelivery: "",
-    driverId: 1,
-  },
-];
+app.get("/orders", async (req, res) => {
+  try {
+    const orders = await Order.find().sort("-orderDate").lean().exec();
+    const orderList = [];
 
-// Ignore this. Formatted Data for Order Website
-const formattedOrdersMockData = [
-  {
-    _id: 1,
-    customerName: "John Doe",
-    deliveryAddress: "45 Four Winds Dr. North York, Toronto, ON",
-    orderCode: "M01",
-    orderItems: [1, 4],
-    orderTotal: 25,
-    orderDate: "2023-10-05",
-    orderStatus: "Received",
-    proofOfDelivery: "",
-    driverId: null,
-    driverName: "",
-    driverLicensePlate: "",
-    isReceived: true,
-  },
-  {
-    _id: 2,
-    customerName: "Finch West",
-    deliveryAddress: "22 Alphabet Dr. North York, Toronto, ON",
-    orderCode: "M02",
-    orderItems: [3, 5, 1],
-    orderTotal: 34,
-    orderDate: "2023-10-06",
-    orderStatus: "Received",
-    proofOfDelivery: "",
-    driverId: null,
-    driverName: "",
-    driverLicensePlate: "",
-    isReceived: true,
-  },
-  {
-    _id: 3,
-    customerName: "Jane Doe",
-    deliveryAddress: "46 Four Winds Dr. North York, Toronto, ON",
-    orderCode: "M03",
-    orderItems: [3],
-    orderTotal: 12,
-    orderDate: "2023-10-06",
-    orderStatus: "In Transit",
-    proofOfDelivery: "",
-    driverId: 1,
-    driverName: "Mike Ross",
-    driverLicensePlate: "ABCD 555",
-    isReceived: false,
-  },
-];
+    for (order of orders) {
+      try {
+        let isReceived = false;
+        let driverName = "";
+        let driverLicensePlate = "";
 
-app.get("/orders", (req, res) => {
-  res.render("orders", {
-    layout: false,
-    orders: formattedOrdersMockData,
-  });
+        const driver = await Driver.findOne({ email: order.driverEmailId });
+
+        if (driver) {
+          driverName = driver.name;
+          driverLicensePlate = driver.licenceplatenumber;
+        }
+        if (order.orderStatus === "Received") {
+          isReceived = true;
+        }
+
+        const orderDate = new Date(order.orderDate);
+        const orderDateTime = `${orderDate.getFullYear()}-${
+          orderDate.getMonth() + 1
+        }-${orderDate.getDate()} ${orderDate.getHours()}:${orderDate.getMinutes()}`;
+
+        const statusesColor = {
+          Received: "#f39c12",
+          "Available For Delivery": "#27ae60",
+          "In Transit": "#2980b9",
+          Delivered: "#2c3e50",
+        };
+        orderList.push({
+          _id: order._id,
+          customerName: order.customerName,
+          deliveryAddress: order.deliveryAddress,
+          orderItems: order.orderItems,
+          orderCode: order.orderCode,
+          orderTotal: order.orderTotal,
+          orderDate: orderDateTime,
+          orderStatus: order.orderStatus,
+          orderStatusColor: statusesColor[order.orderStatus],
+          proofOfDelivery: order.proofOfDelivery,
+          driverEmailId: order.driverEmailId,
+          driverName: driverName,
+          driverLicensePlate: driverLicensePlate,
+          isReceived: isReceived,
+        });
+      } catch (err) {
+        throw new Error(`Cannot find driver for ${order.orderCode} - ${err}`);
+      }
+    }
+
+    res.render("orders", {
+      layout: false,
+      orders: orderList,
+    });
+  } catch (error) {
+    console.log(error);
+    res.render("orders", {
+      layout: false,
+      orders: [],
+      errorMsg: `Error: Cannot list Orders at the moment - ${error}`,
+    });
+  }
 });
 
 app.post("/orders", (req, res) => {
