@@ -194,7 +194,6 @@ app.get("/orders", async (req, res) => {
     res.render("orders", {
       layout: false,
       orders: [],
-      //TODO: handle error
       errorMsg: `Error: Cannot list Orders at the moment - ${error}`,
     });
   }
@@ -222,6 +221,44 @@ app.post("/orders", async (req, res) => {
     }
   }
   res.redirect("/orders");
+});
+
+app.post("/orders/update/:orderCode/:status", async (req, res) => {
+  const orderCode = req.params.orderCode;
+  const status = req.params.status;
+  try {
+    const orderToUpdate = await Order.findOne({ orderCode: orderCode });
+
+    if (orderToUpdate === null) {
+      return res.send("ERROR: Could not find matching order");
+    }
+
+    await orderToUpdate.updateOne({ orderStatus: status });
+
+    res.redirect("/orders");
+  } catch (error) {
+    console.log(error);
+    return res.send("ERROR: Could not update order");
+  }
+});
+
+app.get("/orders/update/:orderCode/:status", async (req, res) => {
+  const orderCode = req.params.orderCode;
+  const status = req.params.status;
+  try {
+    const orderToUpdate = await Order.findOne({ orderCode: orderCode });
+
+    if (orderToUpdate === null) {
+      return res.send("ERROR: Could not find matching order");
+    }
+
+    await orderToUpdate.updateOne({ orderStatus: status });
+
+    res.redirect("/orders");
+  } catch (error) {
+    console.log(error);
+    return res.send("ERROR: Could not update order");
+  }
 });
 
 /*

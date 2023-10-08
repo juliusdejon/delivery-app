@@ -109,3 +109,7 @@ td {
   cursor: pointer;
   border: none;
 }
+.btn-deliver-disabled {
+  background-color: #abb9b5;
+  cursor: not-allowed;
+}
