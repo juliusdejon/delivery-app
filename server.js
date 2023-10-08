@@ -129,92 +129,99 @@ app.get("/remove-order/:orderId", async (req, res) => {
   order endpoints
 */
 
+const getOrders = async (orders) => {
+  const orderList = [];
+
+  for (order of orders) {
+    try {
+      let isReceived = false;
+      let driverName = "";
+      let driverLicensePlate = "";
+
+      const driver = await Driver.findOne({ email: order.driverEmailId });
+
+      if (driver) {
+        driverName = driver.name;
+        driverLicensePlate = driver.licenceplatenumber;
+      }
+      if (order.orderStatus === "Received") {
+        isReceived = true;
+      }
+
+      const orderDate = new Date(order.orderDate);
+      const orderDateTime = `${orderDate.getFullYear()}-${
+        orderDate.getMonth() + 1
+      }-${orderDate.getDate()} ${orderDate.getHours()}:${orderDate.getMinutes()}`;
+
+      const statusesColor = {
+        Received: "#f39c12",
+        "Available For Delivery": "#27ae60",
+        "In Transit": "#2980b9",
+        Delivered: "#2c3e50",
+      };
+      orderList.push({
+        _id: order._id,
+        customerName: order.customerName,
+        deliveryAddress: order.deliveryAddress,
+        orderItems: order.orderItems,
+        orderCode: order.orderCode,
+        orderTotal: order.orderTotal,
+        orderDate: orderDateTime,
+        orderStatus: order.orderStatus,
+        orderStatusColor: statusesColor[order.orderStatus],
+        proofOfDelivery: order.proofOfDelivery,
+        driverEmailId: order.driverEmailId,
+        driverName: driverName,
+        driverLicensePlate: driverLicensePlate,
+        isReceived: isReceived,
+      });
+    } catch (err) {
+      throw new Error(`Cannot find driver for ${order.orderCode} - ${err}`);
+    }
+  }
+  return orderList;
+};
+
 app.get("/orders", async (req, res) => {
   try {
     const orders = await Order.find().sort("-orderDate").lean().exec();
-    const orderList = [];
-
-    for (order of orders) {
-      try {
-        let isReceived = false;
-        let driverName = "";
-        let driverLicensePlate = "";
-
-        const driver = await Driver.findOne({ email: order.driverEmailId });
-
-        if (driver) {
-          driverName = driver.name;
-          driverLicensePlate = driver.licenceplatenumber;
-        }
-        if (order.orderStatus === "Received") {
-          isReceived = true;
-        }
-
-        const orderDate = new Date(order.orderDate);
-        const orderDateTime = `${orderDate.getFullYear()}-${
-          orderDate.getMonth() + 1
-        }-${orderDate.getDate()} ${orderDate.getHours()}:${orderDate.getMinutes()}`;
-
-        const statusesColor = {
-          Received: "#f39c12",
-          "Available For Delivery": "#27ae60",
-          "In Transit": "#2980b9",
-          Delivered: "#2c3e50",
-        };
-        orderList.push({
-          _id: order._id,
-          customerName: order.customerName,
-          deliveryAddress: order.deliveryAddress,
-          orderItems: order.orderItems,
-          orderCode: order.orderCode,
-          orderTotal: order.orderTotal,
-          orderDate: orderDateTime,
-          orderStatus: order.orderStatus,
-          orderStatusColor: statusesColor[order.orderStatus],
-          proofOfDelivery: order.proofOfDelivery,
-          driverEmailId: order.driverEmailId,
-          driverName: driverName,
-          driverLicensePlate: driverLicensePlate,
-          isReceived: isReceived,
-        });
-      } catch (err) {
-        throw new Error(`Cannot find driver for ${order.orderCode} - ${err}`);
-      }
-    }
-
+    const orderList = await getOrders(orders);
     res.render("orders", {
       layout: false,
       orders: orderList,
     });
   } catch (error) {
-    console.log(error);
     res.render("orders", {
       layout: false,
       orders: [],
+      //TODO: handle error
       errorMsg: `Error: Cannot list Orders at the moment - ${error}`,
     });
   }
 });
 
-app.post("/orders", (req, res) => {
+app.post("/orders", async (req, res) => {
   const customerName = req.body.customerName;
   if (customerName) {
-    // will replace .filter with mongo search
-    const filteredOrdersData = formattedOrdersMockData.filter((data) =>
-      data.customerName
-        .toLocaleLowerCase()
-        .includes(customerName.toLocaleLowerCase())
-    );
-    res.render("orders", {
-      layout: false,
-      orders: filteredOrdersData,
-    });
-  } else {
-    res.render("orders", {
-      layout: false,
-      orders: formattedOrdersMockData,
-    });
+    try {
+      const orders = await Order.find({ customerName })
+        .collation({ locale: "en", strength: 2 })
+        .sort("-orderDate")
+        .lean()
+        .exec();
+      const orderList = await getOrders(orders);
+      return res.render("orders", {
+        layout: false,
+        orders: orderList,
+      });
+    } catch (error) {
+      return res.render("orders", {
+        layout: false,
+        orders: [],
+      });
+    }
   }
+  res.redirect("/orders");
 });
 
 /*
